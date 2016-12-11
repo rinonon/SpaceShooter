@@ -8,6 +8,7 @@
 
 #include "Game/Player.h"
 
+
 USING_NS_CC;
 
 bool Player::init(){
@@ -17,11 +18,19 @@ bool Player::init(){
     }
     
     this->setScale(1.2);
-    mHitPoint = 5;
-    mBulletInterval = 0.5;
+    mHpMax = mHitPoint = 5;
+    mBulletInterval = 0.3;
     mLastBulletTime = 0;
     
     mType = TYPE_NORMAL;
+    
+    
+    //HPBarの設定
+    mHpBar = ui::LoadingBar::create("HPBar.png");
+    mHpBar->setPercent(100);
+    mHpBar->setPosition(Vec2(this->getContentSize().width/2, this->getContentSize().height));
+    
+    this->addChild(mHpBar);
     
     return true;
 }
@@ -31,9 +40,11 @@ void Player::damaged(){
     Action* action;
     mHitPoint--;
     
-    if(mHitPoint < 0) {
+    mHpBar->setPercent( 100 * static_cast<float>(mHitPoint) / mHpMax);
+    
+    if(mHitPoint <= 0) {
         
-        this->stopAllActions();
+        mBulletInterval = 0xffffffff;
         action = ScaleTo::create(2, 0.1);
         
         this->runAction(Sequence::create(DelayTime::create(2), CallFunc::create([this]() { this->mType = TYPE_NONE; } ), NULL));
@@ -44,7 +55,6 @@ void Player::damaged(){
         action = Blink::create(0.2, 2);
       
     }
-    
       this->runAction(action);
 }
 

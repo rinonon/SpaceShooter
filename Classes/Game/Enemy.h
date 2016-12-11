@@ -10,6 +10,7 @@
 #define Enemy_h
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 
 class Enemy : public cocos2d::Sprite {
 public:
@@ -26,7 +27,7 @@ public:
     virtual bool init(); //initialize func
     
     bool isDead() const;
-    void damaged(int power);
+    int damaged(int power);
     float getBulletInterval() const;
     void setLastBulletTime(float t);
     float getLastBulletTime() const;
@@ -34,8 +35,11 @@ public:
 private:
     Type mType;
     int mHitPoint;
+    int mHitPointMax;
+    int mScore;
     float mBulletInterval;
     float mLastBulletTime;
+    cocos2d::ui::LoadingBar* mHpBar;
     
     cocos2d::Vec2 origin;
     cocos2d::Size visibleSize;

@@ -28,9 +28,14 @@ bool Bullet::init(){
     std::string filename;
     
     switch (mOwner) {
-        case O_PLAYER: filename = "PlayerBullet.png";
+        case O_PLAYER:
+            filename = "PlayerBullet.png";
+            mBulletSpeed = 1500;
             break;
-        case O_ENEMY: filename = "EnemyBullet.png";
+            
+        case O_ENEMY:
+            filename = "EnemyBullet.png";
+            mBulletSpeed = 800;
             
         default:
             break;
@@ -43,12 +48,11 @@ bool Bullet::init(){
     this->setScale(2);
     mBrokenFlag = false;
     mPower = 1;
-    mBulletSpeed = 500;
     
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
     
-    auto move = MoveBy::create(1, Vec2(cos(mAngle) * mBulletSpeed, sin(mAngle) * mBulletSpeed));
+    auto move = MoveBy::create(5, Vec2(cos(mAngle) * mBulletSpeed, sin(mAngle) * mBulletSpeed));
     auto remove = RemoveSelf::create();
     
     auto seq = Sequence::create(move, remove, nullptr);

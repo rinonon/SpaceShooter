@@ -10,6 +10,7 @@
 #define Player_h
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 
 class Player : public cocos2d::Sprite {
 public:
@@ -34,7 +35,9 @@ private:
     float mLastBulletTime;
     float mBulletInterval;
     int mHitPoint;
+    int mHpMax;
     Type mType;
+    cocos2d::ui::LoadingBar* mHpBar;
     
 };
 

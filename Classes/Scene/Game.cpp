@@ -6,12 +6,15 @@
 //
 //
 #include <cmath>
+#include <sstream>
 #include "ui/CocosGUI.h"
 
 #include "Definition.h"
+#include "File.h"
 #include "Scene/Game.h"
 #include "Scene/Title.h"
 #include "Scene/GameOver.h"
+#include "Scene/Pause.h"
 
 #include "Game/Bullet.h"
 #include "Game/Player.h"
@@ -49,7 +52,16 @@ bool Game::init()
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
     
+    //パラメータ初期設定
+    mScore = 0;
+    mTime = 0;
+    mBgMoveSpeed = 4;
+    
+    initBackGround();
+    
     initPauseButton();
+    
+    initScoreLabel();
     
     initPlayer();
     
@@ -57,12 +69,28 @@ bool Game::init()
     
     initPhysics();
     
-    initEnemy();
+    initStageData();
     
     scheduleUpdate();
     
     return true;
 }
+
+
+void Game::initBackGround() {
+    
+    backGroundA = Sprite::create("backGround.png");
+    backGroundA->setAnchorPoint(Vec2(0,0));
+    backGroundA->setPosition(Vec2(0 + origin.x, 0));
+    this->addChild(backGroundA, Z_BG);
+    
+    //Aの下に設置
+    backGroundB = Sprite::create("backGround.png");
+    backGroundB->setAnchorPoint(Vec2(0,0));
+    backGroundB->setPosition(Vec2(0, -backGroundB->getContentSize().height));
+    this->addChild(backGroundB, Z_BG);
+}
+
 
 
 void Game::initPauseButton() {
@@ -82,11 +110,18 @@ void Game::initPauseButton() {
     });
     
     button->setScale(0.2);
-    
     button->setAnchorPoint(Vec2(1,1));
     button->setPosition(Vec2(visibleSize.width + origin.x, visibleSize.height + origin.y));
     
     this->addChild(button, Z_BUTTON);
+}
+
+void Game::initScoreLabel(){
+    mScoreLabel = Label::createWithSystemFont("Score", "Arial", 12);
+    mScoreLabel->setColor(Color3B(255, 255, 255));
+    mScoreLabel->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height - mScoreLabel->getContentSize().height ));
+    
+    this->addChild(mScoreLabel, Z_LABEL);
 }
 
 bool Game::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event){
@@ -140,16 +175,19 @@ bool Game::onContactBegin(cocos2d::PhysicsContact& object){
         
         //敵とプレイヤーの弾
         if(nodeB->getTag() == T_ENEMY){
-            log("player's bullet and enemy");
+          //  log("player's bullet and enemy");
             Enemy* enemy = static_cast<Enemy*>(nodeB);
             
             bullet->hit();
-            enemy->damaged(bullet->getPower());
+            mScore += enemy->damaged(bullet->getPower());
         }
         
         //プレイヤーと敵の弾
-        else if(object.getShapeB()->getTag() == T_PLAYER) {
+        else if(nodeB->getTag() == T_PLAYER) {
+            Player* player = static_cast<Player*>(nodeB);
             
+            bullet->hit();
+            player->damaged();
         }
     }
     
@@ -160,16 +198,19 @@ bool Game::onContactBegin(cocos2d::PhysicsContact& object){
         
         //敵とプレイヤーの弾
         if(nodeA->getTag() == T_ENEMY){
-            log("player's bullet and enemy");
+           // log("player's bullet and enemy");
             Enemy* enemy = static_cast<Enemy*>(nodeA);
             
             bullet->hit();
-            enemy->damaged(bullet->getPower());
+            mScore += enemy->damaged(bullet->getPower());
         }
         
         //プレイヤーと敵の弾
         else if(nodeA->getTag() == T_PLAYER) {
+            Player* player = static_cast<Player*>(nodeA);
             
+            bullet->hit();
+            player->damaged();
         }
     }
     
@@ -206,11 +247,14 @@ void Game::initPlayer(){
 }
 
 
-void Game::initEnemy(){
+void Game::initStageData(){
     mEnemyConfig = {
-        {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6},
-        {1, 8}, {1, 9}, {1, 10}, {1, 11}, {1, 12}
+        {0, 3}, {0, 5}, {0, 7}, {1, 8}, {0, 12},
+        {1, 15}, {0, 19}, {1, 22}, {1, 25}, {0, 30},
+        {0, 37}, {1, 37}, {0, 37}, {0, 40}, {0, 40},
+        {0, 40}, {1, 45}, {1, 46}, {1, 47}, {1, 48},
     };
+    
 }
 
 
@@ -284,10 +328,21 @@ void Game::spawnEnemyBullet(){
         }
         
         //create bullet
-        
         //calculate angle
-        double angle = atan((mPlayer->getPositionX() - enemy->getPositionX()) / (mPlayer->getPositionY() - enemy->getPositionY()));
+        double angle = atan(((mPlayer->getPositionY() - enemy->getPositionY()) ) / ((mPlayer->getPositionX() - enemy->getPositionX() )));
         
+        //Playerのほうが左
+        if(mPlayer->getPositionX() < enemy->getPositionX()){
+            angle += M_PI;
+        }
+        
+        if(angle >= 0 && angle < M_PI_2) {
+            angle = 0;
+            
+        } else if(angle <= M_PI && angle > M_PI_2) {
+            angle = M_PI;
+        }
+                
         auto bullet = Bullet::create(Bullet::O_ENEMY, angle);
         bullet->setPosition(enemy->getPosition());
         
@@ -308,7 +363,11 @@ void Game::spawnEnemyBullet(){
 
 
 void Game::update(float dt){
-    mTime += dt;
+    
+    //プレイヤーが死んだらゲームオーバーへ
+    if(mPlayer->isDead()){
+        goToGameOver();
+    }
     
     //時間になったらエネミー生成
     if(mEnemyConfig.size() > 0 && mTime >= mEnemyConfig[0].spawnTime){
@@ -319,11 +378,15 @@ void Game::update(float dt){
     
     spawnEnemyBullet();
     
-    //プレイヤーが死んだらゲームオーバーへ
-    if(mPlayer->isDead()){
-        goToGameOver();
-    }
+    //Score表示
+    mScoreString = "score: " + std::to_string(mScore);
+    mScoreLabel->setString(mScoreString);
     
+    //背景処理
+    updateBackGround();
+    
+    mTime += dt;
+
 }
 
 void Game::goToGameOver(){
@@ -333,8 +396,51 @@ void Game::goToGameOver(){
 }
 
 void Game::goToPause(){
+
+    //一時停止し、新たにレイヤーを重ねる
+    pause();
+    auto layer = Pause::createLayer();
+    this->addChild(layer, T_PAUSE);
+}
+
+
+void Game::pause(){
+ 
+    this->cocos2d::Node::pause();
     
-    //  auto scene =
+    for(auto node : this->getChildren()) {
+        node->pause();
+    }
+}
+
+
+void Game::unPause(){
+
+    this->cocos2d::Node::resume();
+    mPlayer->resume();
+    
+    for(auto node : this->getChildren()) {
+        node->resume();
+    }
+}
+
+
+void Game::updateBackGround() {
+    
+    // 背景ABを毎フレームごとに上にスクロールする
+    backGroundA->setPositionY(backGroundA->getPositionY() + mBgMoveSpeed);
+    backGroundB->setPositionY(backGroundB->getPositionY() + mBgMoveSpeed);
+
+    //Aが画面外にでたらBの下に移動
+    if(backGroundA->getPositionY() > visibleSize.height){
+        
+        backGroundA->setPositionY(backGroundB->getPositionY() - backGroundA->getContentSize().height);
+        
+        //AとBを入れ替える
+        auto temp = backGroundB;
+        backGroundB = backGroundA;
+        backGroundA = temp;
+    }
 }
 
 void Game::menuCloseCallback(Ref* pSender)

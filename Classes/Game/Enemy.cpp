@@ -37,15 +37,17 @@ bool Enemy::init(){
     switch(mType){
         case TYPE1:
             filename = "Enemy1.png";
-            mHitPoint = 3;
+            mHitPointMax = mHitPoint = 3;
             mBulletInterval = 2;
+            mScore = 500;
             action = getAction1();
             break;
             
         case TYPE2:
             filename = "Enemy2.png";
-            mHitPoint = 5;
+            mHitPointMax = mHitPoint = 5;
             mBulletInterval = 1;
+            mScore = 1000;
             action = getAction2();
             break;
             
@@ -66,9 +68,16 @@ bool Enemy::init(){
     
     initPos = Vec2(visibleSize.width * rand + origin.x , visibleSize.height);
     
-    this->setScale(2);
     this->setPosition(initPos);
     this->runAction(action);
+    
+    
+    //HPBarの設定
+    mHpBar = ui::LoadingBar::create("HPBar.png");
+    mHpBar->setPercent(100);
+    mHpBar->setPosition(Vec2(this->getContentSize().width/2, this->getContentSize().height));
+    
+    this->addChild(mHpBar);
     
     return true;
 }
@@ -99,25 +108,30 @@ Action* Enemy::getAction2(){
 }
 
 
-void Enemy::damaged(int power) {
+int Enemy::damaged(int power) {
     
     mHitPoint -= power;
     Action* action;
+    int score = 0;
     
-    if(mHitPoint < 0) {
+    mHpBar->setPercent( 100 * static_cast<float>(mHitPoint) / mHitPointMax);
+    
+    if(mHitPoint <= 0) {  //死んでいれば
         
         mType = TYPE_NONE;
-        
+        score = mScore;
         this->stopAllActions();
-        
         action = RemoveSelf::create();
-    } else {
-    
-        //死んでいなければ点滅
+        
+        mHpBar->runAction(RemoveSelf::create());
+    }
+    else {  //死んでいなければ
         action = Blink::create(0.2, 2);
     }
     
     this->runAction(action);
+    
+    return score;
 }
 
 bool Enemy::isDead() const{

@@ -10,6 +10,7 @@
 #define __GAME_SCENE_H__
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 
 class Player;
 class Enemy;
@@ -24,12 +25,14 @@ public:
         Z_ENEMY,
         Z_PLAYER,
         Z_BUTTON,
+        Z_LABEL,
     };
     
     enum tag{
         T_BULLET = 1,
         T_ENEMY,
         T_PLAYER,
+        T_PAUSE,
     };
     
     //衝突判定用
@@ -60,10 +63,17 @@ public:
     //衝突イベント
     bool onContactBegin(cocos2d::PhysicsContact& object);
     
+    void pause();
+    void unPause();
+    
 private:
     cocos2d::PhysicsWorld* sceneWorld;
     cocos2d::Vec2 origin;
     cocos2d::Size visibleSize;
+    cocos2d::Label* mScoreLabel;
+    cocos2d::Sprite* backGroundA;
+    cocos2d::Sprite* backGroundB;
+    std::string mScoreString;
     
     void goToGameOver();
     void goToPause();
@@ -71,20 +81,24 @@ private:
     void setPhysicsWorld(cocos2d::PhysicsWorld* world) { sceneWorld = world; };
     void initPhysics();
     void initTouchEvent();
+    void initBackGround();
     void initPauseButton();
+    void initScoreLabel();
     
     void initPlayer();
-    void initEnemy();
+    void initStageData();
     void spawnEnemy();
     void spawnPlayerBullet();
     void spawnEnemyBullet();
-    
-   // void CollisionDetection();
+    void updateBackGround();
+
     void update(float dt);
     
     Player* mPlayer;
     std::vector<EnemyConfig> mEnemyConfig;
     float mTime;
+    int mScore;
+    int mBgMoveSpeed; //背景画像移動速度（ピクセル）
 };
 
 #endif // __GAME_SCENE_H__

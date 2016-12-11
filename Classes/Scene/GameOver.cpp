@@ -41,9 +41,9 @@ bool GameOver::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
-    Sprite* backGround = Sprite::create("background.jpg");
-    //backGround->setAnchorPoint(Vec2(0,0));
-    backGround->setPosition(Vec2(visibleSize.width + origin.x, visibleSize.height + origin.y));
+    Sprite* backGround = Sprite::create("backGround.png");
+    backGround->setAnchorPoint(Vec2(0,0));
+    backGround->setPosition(Vec2(0 + origin.x, 0 + origin.y));
     this->addChild(backGround, -1);
     
     //TitleLabel

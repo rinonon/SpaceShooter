@@ -1,34 +1,29 @@
 //
-//  Title.cpp
+//  Pause.cpp
 //  CatchGame
 //
 //  Created by rinon on 2016/12/06.
 //
 //
 
+#include "Scene/Pause.h"
 #include "Scene/Title.h"
 #include "Scene/Game.h"
 #include "Definition.h"
 
 USING_NS_CC;
 
-Scene* Title::createScene()
+Layer* Pause::createLayer()
 {
-    // 'scene' is an autorelease object
-    auto scene = Scene::create();
-    
     // 'layer' is an autorelease object
-    auto layer = Title::create();
-    
-    // add layer as a child to scene
-    scene->addChild(layer);
+    auto layer = Pause::create();
     
     // return the scene
-    return scene;
+    return layer;
 }
 
 // on "init" you need to initialize your instance
-bool Title::init()
+bool Pause::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -39,21 +34,27 @@ bool Title::init()
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-        
-    //backGround
+    
+    auto foreGround = LayerColor::create(Color4B(255, 255, 255, 127), visibleSize.width + origin.x, visibleSize.height + origin.y);
+    this->addChild(foreGround, -1);
+    
     Sprite* backGround = Sprite::create("backGround.png");
     backGround->setAnchorPoint(Vec2(0,0));
     backGround->setPosition(Vec2(0 + origin.x, 0 + origin.y));
-    this->addChild(backGround, -1);
+   // this->addChild(backGround, -1);
     
     //TitleLabel
-    auto  titleLabel = Label::createWithSystemFont("Shooting Game", "Arial", 24);
+    auto titleLabel = Label::createWithSystemFont("Pause", "Arial", 24);
     titleLabel->setPosition(Vec2(visibleSize.width/2 + origin.x, ((visibleSize.height/4)*3) + origin.y));
    
     //Menu
-    auto playLabel = Label::createWithSystemFont("Play Game", "Arial", 12);
-    auto menu_item1 = MenuItemLabel::create(playLabel, CC_CALLBACK_1(Title::NextGame, this));
-    auto menu = Menu::create(menu_item1, NULL);
+    auto playLabel = Label::createWithSystemFont("Goback game", "Arial", 12);
+    auto settingLabel = Label::createWithSystemFont("Title", "Arial", 12);
+    auto restartLabel = Label::createWithSystemFont("Restart", "Arial", 12);
+    auto menu_item1 = MenuItemLabel::create(playLabel, CC_CALLBACK_1(Pause::goToGame, this));
+    auto menu_item2 = MenuItemLabel::create(settingLabel, CC_CALLBACK_1(Pause::goToTitle, this));
+    auto menu_item3 = MenuItemLabel::create(restartLabel, CC_CALLBACK_1(Pause::goToRestart, this));
+    menu = Menu::create(menu_item1, menu_item3, menu_item2, NULL);
     menu->alignItemsVertically();
     
     menu->setPosition(Vec2((visibleSize.width)/2 + origin.x, (visibleSize.height)/3*1 + origin.y));
@@ -64,14 +65,27 @@ bool Title::init()
     
 }
 
-void Title::NextGame(cocos2d::Ref* pSender){
+void Pause::goToGame(cocos2d::Ref* pSender){
+    
+    //親はGame
+    static_cast<Game*>(this->getParent())->unPause();
+    this->runAction(RemoveSelf::create());
+}
+
+void Pause::goToTitle(cocos2d::Ref* pSender){
+
+    auto scene = Title::createScene();
+    Director::getInstance()->replaceScene(TransitionFade::create(TRANSITION_TIME, scene));
+}
+
+void Pause::goToRestart(cocos2d::Ref *pSender){
     
     auto scene = Game::createScene();
     Director::getInstance()->replaceScene(TransitionFade::create(TRANSITION_TIME, scene));
 }
 
 
-void Title::menuCloseCallback(Ref* pSender)
+void Pause::menuCloseCallback(Ref* pSender)
 {
     //Close the cocos2d-x game scene and quit the application
     Director::getInstance()->end();
