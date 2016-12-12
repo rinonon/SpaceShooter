@@ -7,6 +7,7 @@
 //
 
 #include "Game/Player.h"
+#include "Scene/Game.h"
 
 
 USING_NS_CC;
@@ -24,11 +25,10 @@ bool Player::init(){
     
     mType = TYPE_NORMAL;
     
-    
     //HPBarの設定
     mHpBar = ui::LoadingBar::create("HPBar.png");
     mHpBar->setPercent(100);
-    mHpBar->setPosition(Vec2(this->getContentSize().width/2, this->getContentSize().height));
+    mHpBar->setPosition(Vec2(this->getContentSize().width/2, + this->getContentSize().height + mHpBar->getContentSize().height));
     
     this->addChild(mHpBar);
     
@@ -41,6 +41,7 @@ void Player::damaged(){
     mHitPoint--;
     
     mHpBar->setPercent( 100 * static_cast<float>(mHitPoint) / mHpMax);
+    
     
     if(mHitPoint <= 0) {
         

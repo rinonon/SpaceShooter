@@ -78,6 +78,7 @@
 		F3B464D71DFC160D00A225A3 /* Enemy1.png in Resources */ = {isa = PBXBuildFile; fileRef = F3B464D61DFC160D00A225A3 /* Enemy1.png */; };
 		F3B464D91DFC161400A225A3 /* Enemy2.png in Resources */ = {isa = PBXBuildFile; fileRef = F3B464D81DFC161400A225A3 /* Enemy2.png */; };
 		F3B464DC1DFC21C100A225A3 /* Puase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3B464DA1DFC21C100A225A3 /* Puase.cpp */; };
+		F3B464E11DFD21ED00A225A3 /* Space.png in Resources */ = {isa = PBXBuildFile; fileRef = F3B464E01DFD21ED00A225A3 /* Space.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,6 +201,7 @@
 		F3B464D81DFC161400A225A3 /* Enemy2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Enemy2.png; sourceTree = "<group>"; };
 		F3B464DA1DFC21C100A225A3 /* Puase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Puase.cpp; sourceTree = "<group>"; };
 		F3B464DB1DFC21C100A225A3 /* Pause.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pause.h; sourceTree = "<group>"; };
+		F3B464E01DFD21ED00A225A3 /* Space.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Space.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -429,6 +431,7 @@
 				F3B464D41DFBDDE100A225A3 /* HPBar.png */,
 				F3B464D81DFC161400A225A3 /* Enemy2.png */,
 				F3B464BB1DFA662600A225A3 /* EnemyBullet.png */,
+				F3B464E01DFD21ED00A225A3 /* Space.png */,
 				F3B464D61DFC160D00A225A3 /* Enemy1.png */,
 				F3B464C91DFBB89200A225A3 /* backGround.png */,
 				F3B464C11DFA668000A225A3 /* PauseButton.png */,
@@ -563,6 +566,7 @@
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
 				F3B464D71DFC160D00A225A3 /* Enemy1.png in Resources */,
+				F3B464E11DFD21ED00A225A3 /* Space.png in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
 				F3B464D51DFBDDE100A225A3 /* HPBar.png in Resources */,
 				521A8E6419F0C34300D177D7 /* Default-667h@2x.png in Resources */,

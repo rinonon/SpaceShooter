@@ -26,7 +26,7 @@ Scene* Game::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
-    // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
   
     // 'layer' is an autorelease object
     auto layer = Game::create();
@@ -38,6 +38,7 @@ Scene* Game::createScene()
     // return the scene
     return scene;
 }
+
 
 // on "init" you need to initialize your instance
 bool Game::init()
@@ -79,13 +80,13 @@ bool Game::init()
 
 void Game::initBackGround() {
     
-    backGroundA = Sprite::create("backGround.png");
+    backGroundA = Sprite::create("Space.png");
     backGroundA->setAnchorPoint(Vec2(0,0));
     backGroundA->setPosition(Vec2(0 + origin.x, 0));
     this->addChild(backGroundA, Z_BG);
     
     //Aの下に設置
-    backGroundB = Sprite::create("backGround.png");
+    backGroundB = Sprite::create("Space.png");
     backGroundB->setAnchorPoint(Vec2(0,0));
     backGroundB->setPosition(Vec2(0, -backGroundB->getContentSize().height));
     this->addChild(backGroundB, Z_BG);

@@ -26,6 +26,7 @@ public:
     CREATE_FUNC(Player); //macro of create func
     
     void damaged();
+    void update();
     float getBulletInterval() const;
     bool isDead() const;
     void setLastBulletTime(float t);
