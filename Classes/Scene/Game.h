@@ -43,6 +43,7 @@ public:
     
     struct EnemyConfig{
         int enemyType;
+        int itemType;
         int spawnTime;
     };
     
@@ -59,6 +60,8 @@ public:
     //タップイベント
     virtual bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
     virtual void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
+    virtual void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+
     
     //衝突イベント
     bool onContactBegin(cocos2d::PhysicsContact& object);
@@ -95,6 +98,7 @@ private:
     void update(float dt);
     
     Player* mPlayer;
+    bool mTouchFlag; //Playerがタッチされているかどうか
     std::vector<EnemyConfig> mEnemyConfig;
     float mTime;
     int mScore;

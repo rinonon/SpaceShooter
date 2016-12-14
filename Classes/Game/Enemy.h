@@ -11,6 +11,8 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include "Game/Item.h"
+
 
 class Enemy : public cocos2d::Sprite {
 public:
@@ -22,8 +24,8 @@ public:
         TYPE_NONE,
     };
     
-    Enemy(Type type);
-    static Enemy* create(Type type);
+    Enemy(Type type, Item::Type itemType);
+    static Enemy* create(Type type, Item::Type itemType);
     virtual bool init(); //initialize func
     
     bool isDead() const;
@@ -34,6 +36,7 @@ public:
     
 private:
     Type mType;
+    Item::Type mItemType;
     int mHitPoint;
     int mHitPointMax;
     int mScore;

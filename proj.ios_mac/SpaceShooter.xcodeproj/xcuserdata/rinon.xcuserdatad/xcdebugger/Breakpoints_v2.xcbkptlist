@@ -24,13 +24,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/Scene/Game.cpp"
-            timestampString = "503112070.143241"
+            timestampString = "503378110.978793"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "400"
-            endingLineNumber = "400"
-            landmarkName = "Game::goToPause()"
-            landmarkType = "7">
+            startingLineNumber = "428"
+            endingLineNumber = "428">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -40,13 +38,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/Scene/Game.cpp"
-            timestampString = "503112070.143241"
+            timestampString = "503378110.978793"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "409"
-            endingLineNumber = "409"
-            landmarkName = "Game::pause()"
-            landmarkType = "7">
+            startingLineNumber = "437"
+            endingLineNumber = "437">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -56,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/Scene/Game.cpp"
-            timestampString = "503112070.143241"
+            timestampString = "503378110.978793"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "410"
-            endingLineNumber = "410"
+            startingLineNumber = "438"
+            endingLineNumber = "438"
             landmarkName = "Game::pause()"
             landmarkType = "7">
          </BreakpointContent>
@@ -79,6 +75,20 @@
             endingLineNumber = "70"
             landmarkName = "Pause::goToGame(cocos2d::Ref* pSender)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Classes/Game/Item.h"
+            timestampString = "503319917.747194"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

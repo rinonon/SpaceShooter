@@ -19,6 +19,7 @@
 #include "Game/Bullet.h"
 #include "Game/Player.h"
 #include "Game/Enemy.h"
+#include "Game/Item.h"
 
 USING_NS_CC;
 
@@ -57,6 +58,7 @@ bool Game::init()
     mScore = 0;
     mTime = 0;
     mBgMoveSpeed = 4;
+    mTouchFlag = false;
     
     initBackGround();
     
@@ -76,6 +78,8 @@ bool Game::init()
     
     return true;
 }
+
+
 
 
 void Game::initBackGround() {
@@ -125,13 +129,33 @@ void Game::initScoreLabel(){
     this->addChild(mScoreLabel, Z_LABEL);
 }
 
+
+
 bool Game::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event){
-    mPlayer->setPosition(touch->getLocation());
+    
+    auto rect = mPlayer->getTextureRect();
+    auto playerPos = mPlayer->getPosition();
+    auto touchPos = touch->getLocation();
+    
+    //タッチした場所がプレイヤーと重なっていれば
+    if(touchPos.x > playerPos.x - rect.getMidX() && touchPos.x < playerPos.x + rect.getMidX()
+       && touchPos.y > playerPos.y - rect.getMidY() && touchPos.y < playerPos.y + rect.getMidY()) {
+        mPlayer->setPosition(touch->getLocation());
+        mTouchFlag = true;
+    }
     return true;
 }
 
+
+
 void Game::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event){
+    if(mTouchFlag) {
     mPlayer->setPosition(touch->getLocation());
+    }
+}
+
+void Game::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event){
+    mTouchFlag = false;
 }
 
 void Game::initTouchEvent(){
@@ -140,6 +164,7 @@ void Game::initTouchEvent(){
     auto touchListener = EventListenerTouchOneByOne::create();
     touchListener->onTouchBegan = CC_CALLBACK_2(Game::onTouchBegan, this);
     touchListener->onTouchMoved = CC_CALLBACK_2(Game::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(Game::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     return;
@@ -249,11 +274,15 @@ void Game::initPlayer(){
 
 
 void Game::initStageData(){
+    
+    //ItemType 0:NONE, 1:LEBEL, 2:BARRIER, 3:LIFE
+    
     mEnemyConfig = {
-        {0, 3}, {0, 5}, {0, 7}, {1, 8}, {0, 12},
-        {1, 15}, {0, 19}, {1, 22}, {1, 25}, {0, 30},
-        {0, 37}, {1, 37}, {0, 37}, {0, 40}, {0, 40},
-        {0, 40}, {1, 45}, {1, 46}, {1, 47}, {1, 48},
+        {0, 0, 3}, {0, 0, 5}, {0, 0, 7}, {1, 1, 8}, {0, 0, 12},
+        {1, 0, 15}, {0, 2, 19}, {1, 0, 22}, {1, 0, 25}, {0, 1, 30},
+        {0, 0, 37}, {1, 0, 37}, {0, 3, 37}, {0, 0, 40}, {0, 0, 40},
+        {0, 0, 40}, {1, 0, 45}, {1, 3, 46}, {1, 0, 47}, {1, 0, 48},
+        
     };
     
 }
@@ -262,7 +291,8 @@ void Game::initStageData(){
 //Enemy生成
 void Game::spawnEnemy(){
     Enemy::Type type = static_cast<Enemy::Type>(mEnemyConfig[0].enemyType);
-    auto enemy = Enemy::create(type);
+    Item::Type itemType = static_cast<Item::Type>(mEnemyConfig[1].itemType);
+    auto enemy = Enemy::create(type, itemType);
     
     PhysicsBody* body = PhysicsBody::createCircle(enemy->getContentSize().width / 2, PHYSICSBODY_MATERIAL_DEFAULT);
     

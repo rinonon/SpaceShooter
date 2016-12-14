@@ -6,36 +6,39 @@
 //
 //
 
-#include "Game/Bullet.h"
-#include <cmath>
+#include "Game/Item.h"
 
 USING_NS_CC;
 
-Bullet::Bullet(Owner o, float angle) : mOwner(o), mAngle(angle)
+Item::Item(Type type) : mType(type)
 {}
 
-Bullet* Bullet::create(Owner o, float angle){
-    auto bullet = new Bullet(o, angle);
+Item* Item::create(Type type){
     
-    bullet->init(); //Initialize
-    bullet->autorelease();
+    auto item = new Item(type);
     
-    return bullet;
+    item->init(); //Initialize
+    item->autorelease();
+    
+    return item;
 }
 
-bool Bullet::init(){
+bool Item::init(){
     
     std::string filename;
     
-    switch (mOwner) {
-        case O_PLAYER:
+    switch (mType) {
+        case ITEM_LEBEL:
             filename = "PlayerBullet.png";
-            mBulletSpeed = 1500;
             break;
             
-        case O_ENEMY:
+        case ITEM_BARRIER:
             filename = "EnemyBullet.png";
-            mBulletSpeed = 800;
+            break;
+            
+        case ITEM_LIFE:
+            filename = "";
+            break;
             
         default:
             break;
@@ -45,14 +48,11 @@ bool Bullet::init(){
         return false;
     }
     
-    this->setScale(2);
-    mBrokenFlag = false;
-    mPower = 1;
     
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
     
-    auto move = MoveBy::create(5, Vec2(cos(mAngle) * mBulletSpeed, sin(mAngle) * mBulletSpeed));
+    auto move = MoveBy::create(10, Vec2(0, ITEM_SPEED));
     auto remove = RemoveSelf::create();
     
     auto seq = Sequence::create(move, remove, nullptr);
@@ -64,21 +64,4 @@ bool Bullet::init(){
 
 
 
-bool Bullet::isBroken(){
-    return mBrokenFlag;
-}
 
-
-void Bullet::hit(){
-    mBrokenFlag = true;
-    
-    this->stopAllActions();
-    
-    Action* remove = RemoveSelf::create();
-    runAction(remove);
-}
-
-
-int Bullet::getPower(){
-    return mPower;
-}

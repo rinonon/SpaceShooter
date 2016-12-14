@@ -7,15 +7,16 @@
 //
 
 #include "Game/Enemy.h"
+#include "Game/Item.h"
+#include "Scene/Game.h"
 
 USING_NS_CC;
 
-
-Enemy::Enemy(Type type) : mType(type)
+Enemy::Enemy(Type type, Item::Type itemType) : mType(type), mItemType(itemType)
 {}
 
-Enemy* Enemy::create(Type type){
-    auto enemy = new Enemy(type);
+Enemy* Enemy::create(Type type, Item::Type itemType){
+    auto enemy = new Enemy(type, itemType);
     
     enemy->init(); //Initialize
     enemy->autorelease();
@@ -124,6 +125,7 @@ int Enemy::damaged(int power) {
         action = RemoveSelf::create();
         
         mHpBar->runAction(RemoveSelf::create());
+        
     }
     else {  //死んでいなければ
         action = Blink::create(0.2, 2);

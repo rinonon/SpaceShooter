@@ -63,7 +63,6 @@ bool Bullet::init(){
 }
 
 
-
 bool Bullet::isBroken(){
     return mBrokenFlag;
 }

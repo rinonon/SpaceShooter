@@ -6,38 +6,36 @@
 //
 //
 
-#ifndef Bullet_h
-#define Bullet_h
+#ifndef Item_h
+#define Item_h
 
 #include "cocos2d.h"
 
-class Bullet : public cocos2d::Sprite {
+class Item : public cocos2d::Sprite {
 public:
     
     enum Type {
-        SPEED,
-        BARRIER,
+        ITEM_NONE,
         
+        ITEM_LEBEL,
+        ITEM_BARRIER,
+        ITEM_LIFE,
     };
     
-    Bullet(Owner o, float angle);
-    static Bullet* create(Owner o, float angle);
+    Item(Type type);
+    static Item* create(Type type);
     bool init(); //initialize func
     
-    bool isBroken();
     void hit();
     int getPower();
   
 private:
     cocos2d::Vec2 origin;
     cocos2d::Size visibleSize;
+    Type mType;
     
-    bool mBrokenFlag;
-    int mPower;
-    Owner mOwner;
-    float mAngle;
-    int mBulletSpeed;
+    const int ITEM_SPEED = 100;
 };
 
 
-#endif /* Bullet_h */
+#endif /* Item_h */
